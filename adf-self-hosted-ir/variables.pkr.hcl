@@ -54,11 +54,6 @@ variable "source_image_version" {
   description = "The source image version"
 }
 
-variable "source_image_version" {
-  type        = string
-  description = "The source image version"
-}
-
 variable "vm_size" {
   type        = string
   description = "The size of the VM."
