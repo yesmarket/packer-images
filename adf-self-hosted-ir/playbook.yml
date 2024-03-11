@@ -16,11 +16,17 @@
 
           Write-Host "Start Microsoft Integration Runtime download"
 
-          $path = "C:\Users\$Env:UserName\Downloads\IntegrationRuntime.msi"
-          $process = Invoke-WebRequest $url -OutFile $path
+          $path = "C:\temp"
+          If(!(test-path -PathType container $path))
+          {
+            New-Item -ItemType Directory -Path $path
+          }
+
+          $outFile = "$path\IntegrationRuntime.msi"
+          $process = Invoke-WebRequest $url -OutFile $outFile
           if ($process.ExitCode -ne 0)
           { 
-              throw "Failed to download Microsoft Integration Runtime. Exit code: $($process.ExitCode)"
+            throw "Failed to download Microsoft Integration Runtime. Exit code: $($process.ExitCode)"
           }
 
           Write-Host "Succeed to download Microsoft Integration Runtime"
@@ -32,11 +38,11 @@
         script: |
           Write-Host "Start Microsoft Integration Runtime installation"
           
-          $path = "C:\Users\$Env:UserName\Downloads\IntegrationRuntime.msi"
+          $path = "C:\temp\IntegrationRuntime.msi"
           $process = Start-Process "msiexec.exe" "/i $path /quiet /passive" -Wait -PassThru
           if ($process.ExitCode -ne 0)
           {
-              throw "Failed to install Microsoft Integration Runtime. msiexec exit code: $($process.ExitCode)"
+            throw "Failed to install Microsoft Integration Runtime. msiexec exit code: $($process.ExitCode)"
           }
           Start-Sleep -Seconds 30
 
