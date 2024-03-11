@@ -58,8 +58,3 @@ variable "vm_size" {
   type        = string
   description = "The size of the VM."
 }
-
-variable "adf_shir_msi_url" {
-  type        = string
-  description = "The download URL of the ADF self-hosted IR installer."
-}

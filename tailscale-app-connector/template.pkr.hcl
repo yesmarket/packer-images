@@ -7,7 +7,7 @@ source "azure-arm" "this" {
   location                          = var.location
   managed_image_name                = var.image_name
   managed_image_resource_group_name = var.resource_group_name
-  os_type                           = "Windows"
+  os_type                           = "Linux"
   subscription_id                   = var.subscription_id
   tenant_id                         = var.tenant_id
   vm_size                           = var.vm_size
@@ -15,9 +15,8 @@ source "azure-arm" "this" {
 
 build {
   sources = ["source.azure-arm.this"]
-
-  provisioner "powershell" {
-  	environment_vars = ["url=${var.adf_shir_msi_url}"]
-  	script = "./InstallGatewayOnLocalMachine.ps1"
+  
+  provisioner "shell" {
+  	script = "./tailscale.sh"
   }
 }
