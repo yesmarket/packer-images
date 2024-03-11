@@ -15,11 +15,8 @@ source "azure-arm" "this" {
 
 build {
   sources = ["source.azure-arm.this"]
-
-  provisioner "shell" {
-    execute_command = "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'"
-    inline          = ["apt-get update", "apt-get upgrade -y", "apt-get -y install nginx", "/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"]
-    inline_shebang  = "/bin/sh -x"
+  
+  provisioner "ansible" {
+  	playbook_file = "./playbook.yml"
   }
-
 }
