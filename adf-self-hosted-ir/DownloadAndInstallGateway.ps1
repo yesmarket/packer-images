@@ -67,19 +67,13 @@ function UnInstall-Gateway()
         $installed = $true
     }
 
-    if (Check-WhetherGatewayInstalled("Microsoft Integration Runtime"))
-    {
-        [void](Get-WmiObject -Class Win32_Product -Filter "Name='Microsoft Integration Runtime Preview' or Name='Microsoft Integration Runtime'" -ComputerName $env:COMPUTERNAME).Uninstall()
-        $installed = $true
-    }
-
     if ($installed -eq $false)
     {
-        Write-Host "Microsoft Integration Runtime is not installed."
+        Write-Host "ADF self-hosted IR is not installed."
         return
     }
 
-    Write-Host "Microsoft Integration Runtime has been uninstalled from this machine."
+    Write-Host "ADF self-hosted IR has been uninstalled from this machine."
 }
 
 function Delete-Installer([string] $path)

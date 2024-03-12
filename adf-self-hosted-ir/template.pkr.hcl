@@ -14,12 +14,12 @@ source "azure-arm" "this" {
   communicator                      = "winrm"
   winrm_username                    = "packer"
   winrm_insecure                    = true
+  winrm_timeout                     = "5m"
   winrm_use_ssl                     = true
 }
 
 build {
   sources = ["source.azure-arm.this"]
-
 
   provisioner "powershell" {
     environment_vars = ["url=${var.adf_shir_msi_url}"]
