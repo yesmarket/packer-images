@@ -16,9 +16,10 @@ function Download-Installer([string] $url, [string] $path)
     Write-Host "Starting ADF self-hosted IR download"
 
     $process = Invoke-WebRequest $url -OutFile $path
-    if ($process.ExitCode -ne 0)
+    if ($process.ExitCode -ne 0 -and !([string]::IsNullOrEmpty($process.ExitCode)))
     {
-        throw "Failed to download ADF self-hosted IR. Exit code: $($process.ExitCode)"
+        $exitcode = $process.ExitCode
+        throw "Exit code: $exitcode - Failed to download ADF self-hosted IR"
     }
 
     Write-Host "Completed ADF self-hosted IR download"
@@ -34,7 +35,8 @@ function Install-Gateway([string] $path)
     $process = Start-Process "msiexec.exe" "/i $path /quiet /passive" -Wait -PassThru
     if ($process.ExitCode -ne 0)
     {
-        throw "Failed to install ADF self-hosted IR. msiexec exit code: $($process.ExitCode)"
+        $exitcode = $process.ExitCode
+        throw "Exit code: $exitcode - Failed to install ADF self-hosted IR"
     }
     Start-Sleep -Seconds 30	
 
@@ -83,14 +85,14 @@ function UnInstall-Gateway()
 function Delete-Installer([string] $path)
 {
     $process = Remove-Item -Path $path
-    if ($process.ExitCode -ne 0)
+    if ($process.ExitCode -ne 0 -and !([string]::IsNullOrEmpty($process.ExitCode)))
     {
-        throw "Failed to delete ADF self-hosted IR installer. msiexec exit code: $($process.ExitCode)"
+        $exitcode = $process.ExitCode
+        throw "Exit code: $exitcode - Failed to delete ADF self-hosted IR installer"
     }
 
     Write-Host "Deleted ADF self-hosted IR installer"
 }
-
 
 If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
     [Security.Principal.WindowsBuiltInRole] "Administrator"))
@@ -99,7 +101,7 @@ If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     Break
 }
 
-$path = Get-Path()
-Download-Installer $Env:url $path
-Install-Gateway $path
-Delete-Installer $path
+$msiPath = Get-Path
+Download-Installer $Env:url $msiPath
+Install-Gateway $msiPath
+Delete-Installer $msiPath

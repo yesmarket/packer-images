@@ -17,6 +17,6 @@ build {
   sources = ["source.azure-arm.this"]
 
   provisioner "shell" {
-    script = "./tailscale.sh"
+    script = "./strongswan.sh"
   }
 }

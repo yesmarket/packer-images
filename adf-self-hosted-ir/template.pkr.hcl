@@ -11,13 +11,23 @@ source "azure-arm" "this" {
   subscription_id                   = var.subscription_id
   tenant_id                         = var.tenant_id
   vm_size                           = var.vm_size
+  communicator                      = "winrm"
+  winrm_username                    = "packer"
+  winrm_insecure                    = true
+  winrm_use_ssl                     = true
 }
 
 build {
   sources = ["source.azure-arm.this"]
 
+
   provisioner "powershell" {
-  	environment_vars = ["url=${var.adf_shir_msi_url}"]
-  	script = "./InstallGatewayOnLocalMachine.ps1"
+    environment_vars = ["url=${var.adf_shir_msi_url}"]
+    script           = "./DownloadAndInstallGateway.ps1"
+  }
+
+  provisioner "file" {
+    source      = "RegisterGateway.ps1"
+    destination = "C:/temp/RegisterGateway.ps1"
   }
 }

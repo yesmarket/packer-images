@@ -15,8 +15,8 @@ source "azure-arm" "this" {
 
 build {
   sources = ["source.azure-arm.this"]
-  
+
   provisioner "shell" {
-  	script = "./tailscale.sh"
+    script = "./tailscale.sh"
   }
 }
