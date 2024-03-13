@@ -1,21 +1,16 @@
-function Get-Path()
+function Create-Path()
 {
-    $path = "C:\temp"
-    If(!(test-path -PathType container $path))
+    If(!(test-path -PathType container "C:\temp"))
     {
-        New-Item -ItemType Directory -Path $path
+        New-Item -ItemType Directory -Path "C:\temp"
     }
-
-    $outFile = "$path\IntegrationRuntime.msi"
-
-    return $outFile
 }
 
-function Download-Installer([string] $url, [string] $path)
+function Download-Installer([string] $url)
 {
-    Write-Host "Starting ADF self-hosted IR download"
-
-    $process = Invoke-WebRequest $url -OutFile $path
+    Write-Host "Starting ADF self-hosted IR download from $url"
+    
+    $process = Invoke-WebRequest $url -OutFile "C:\temp\IntegrationRuntime.msi"
     if ($process.ExitCode -ne 0 -and !([string]::IsNullOrEmpty($process.ExitCode)))
     {
         $exitcode = $process.ExitCode
@@ -25,14 +20,14 @@ function Download-Installer([string] $url, [string] $path)
     Write-Host "Completed ADF self-hosted IR download"
 }
 
-function Install-Gateway([string] $path)
+function Install-Gateway()
 {
     # uninstall any existing gateway
     UnInstall-Gateway
 
     Write-Host "Starting ADF self-hosted IR installation"
     
-    $process = Start-Process "msiexec.exe" "/i $path /quiet /passive" -Wait -PassThru
+    $process = Start-Process "msiexec.exe" "/i C:\temp\IntegrationRuntime.msi /quiet /passive" -Wait -PassThru
     if ($process.ExitCode -ne 0)
     {
         $exitcode = $process.ExitCode
@@ -76,9 +71,9 @@ function UnInstall-Gateway()
     Write-Host "ADF self-hosted IR has been uninstalled from this machine."
 }
 
-function Delete-Installer([string] $path)
+function Delete-Installer()
 {
-    $process = Remove-Item -Path $path
+    $process = Remove-Item -Path "C:\temp\IntegrationRuntime.msi"
     if ($process.ExitCode -ne 0 -and !([string]::IsNullOrEmpty($process.ExitCode)))
     {
         $exitcode = $process.ExitCode
@@ -95,7 +90,7 @@ If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     Break
 }
 
-$msiPath = Get-Path
-Download-Installer $Env:url $msiPath
-Install-Gateway $msiPath
-Delete-Installer $msiPath
+Create-Path
+Download-Installer $Env:url
+Install-Gateway
+Delete-Installer
