@@ -8,3 +8,4 @@ Includes the following templates:
 * Strongswan IPSec VPN customer gateway. This was used for a site-to-site VPN POC in AWS and Azure.
 * Tailscale app-connector - used to provide remote access to private third-party PaaS and SaaS applications - see [here](https://tailscale.com/kb/1281/app-connectors).
 * Tailscale subnet-router used to provide remote access to a VMs in a private subnet (or peered network) - see [here](https://tailscale.com/kb/1019/subnets).
+
