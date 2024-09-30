@@ -9,11 +9,3 @@ Includes the following templates:
 * Tailscale app-connector - used to provide remote access to private third-party PaaS and SaaS applications - see [here](https://tailscale.com/kb/1281/app-connectors).
 * Tailscale subnet-router used to provide remote access to a VMs in a private subnet (or peered network) - see [here](https://tailscale.com/kb/1019/subnets).
 
-# Deploy
-
-`terraform plan --out=plan.tfplan`<br/>
-`terraform apply "plan.tfplan"`
-
-# Destroy
-
-`terraform destroy`
