@@ -1,0 +1,66 @@
+---
+# playbook.yml
+- name: Install and configure nginx reverse proxy
+  hosts: default
+  become: true
+  tasks:
+    - name: install nodejs
+      apt:
+        name: nodejs
+        state: present
+
+    - name: create directory for express web-server
+      file:
+        path: /opt/app
+        state: directory
+        mode: '0755'
+
+    - name: copy server.js
+      copy:
+        src: opt/app/server.js
+        dest: /opt/app/server.js
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: install nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: copy nginx.conf
+      copy:
+        src: etc/nginx/nginx.conf
+        dest: /etc/nginx/nginx.conf
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: create sites-available dir
+      file:
+        path: /etc/nginx/sites-available
+        state: directory
+        mode: '0755'
+
+    - name: copy reverse-proxy.conf
+      copy:
+        src: etc/nginx/sites-available/reverse-proxy.conf.j2
+        dest: /etc/nginx/sites-available/reverse-proxy.conf
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: create sites-enabled dir
+      file:
+        path: /etc/nginx/sites-enabled
+        state: directory
+        mode: '0755'
+
+    - name: create symbolic link between sites-available and sites-enabled
+      file:
+        src: /etc/nginx/sites-available/reverse-proxy.conf
+        dest: /etc/nginx/sites-enabled/reverse-proxy.conf
+        owner: root
+        group: root
+        state: link
+
