@@ -11,17 +11,9 @@ sudo apt-get -y update
 sudo apt -y install python3-pip keychain
 sudo pip3 install ansible --no-warn-script-location
 
-#####################################
-# install gnome desktop and xrdp (remove desktop protocol)
-# Reason for installing these are so that I can RDP to the VM
-# and run GUI apps like VSCode, sure there's things like MobaXterm, but...
-#####################################
-sudo apt-get install ubuntu-gnome-desktop -y
-sudo apt-get install xrdp -y
-sudo sed -i 's/allowed_users=console/allowed_users=anybody/' /etc/X11/Xwrapper.config
 
 #####################################
-# install VSCode
+# install VSCode - might want to work on Ansible project using VSCode via MobaXterm
 #####################################
 curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
 sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
@@ -30,6 +22,7 @@ sudo apt-get update
 sudo apt-get install -y code
 code --install-extension redhat.ansible
 
+
 #####################################
 # install docker
 #####################################
@@ -37,11 +30,7 @@ curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 sudo groupadd docker
 sudo usermod -aG docker $USER
-#newgrp docker
-#docker --version
-#docker run hello-world
-#reboot
-#docker run hello-world
+
 
 #####################################
 # install minicube
@@ -50,7 +39,7 @@ sudo apt update
 sudo apt install -y curl wget apt-transport-https
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
-#minikube version
+
 
 #####################################
 # install kubectl
@@ -58,9 +47,10 @@ sudo install minikube-linux-amd64 /usr/local/bin/minikube
 curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
 chmod +x kubectl
 sudo mv kubectl /usr/local/bin/
-#kubectl version -o yaml
+
 
 #####################################
 # install other stuff
 #####################################
 sudo apt install git make -y
+sudo python3 -m pip install argcomplete
